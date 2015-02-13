@@ -1,0 +1,12 @@
+<plugins xmlns="http://jnrpe.sourceforge.net/plugins" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://jnrpe.sourceforge.net/plugins plugin.xsd">
+    <plugin name="ELASTIC_ALARM" class="com.zcloud.monitor.alarm.MonitorAlarmPlugin">
+        <description>
+            This plugin control ELASTIC_ALARM
+        </description>
+        <command-line>
+            <options>
+            </options>
+        </command-line>
+    </plugin>
+</plugins>

@@ -1,0 +1,15 @@
+build/
+*/build/
+classes/
+.DS_Store
+.idea/
+.jar
+*.iml
+gradle/
+.gradle
+out/
+log/*
+target/
+*/target
+lib/
+*/lib/
