@@ -25,7 +25,7 @@ public class MonitorAlarmBootstrap {
 //            System.out.println("---------------");
 //        }
 
-        System.out.println(Jsons.objectToPrettyJSONStr(service.getAlarmMetrics()));
+        System.out.println(Jsons.objectToPrettyJSONStr(service.getAlarmMetrics("")));
 
     }
 }

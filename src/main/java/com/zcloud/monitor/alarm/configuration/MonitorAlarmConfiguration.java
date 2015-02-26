@@ -10,6 +10,7 @@ public class MonitorAlarmConfiguration {
     private String index;
     private String visuTypeName;
     private String alarmTypeName;
+    private String defServiceName;
 
     public String getIndex() {
         return index;
@@ -33,5 +34,13 @@ public class MonitorAlarmConfiguration {
 
     public void setAlarmTypeName(String alarmTypeName) {
         this.alarmTypeName = alarmTypeName;
+    }
+
+    public String getDefServiceName() {
+        return defServiceName;
+    }
+
+    public void setDefServiceName(String defServiceName) {
+        this.defServiceName = defServiceName;
     }
 }

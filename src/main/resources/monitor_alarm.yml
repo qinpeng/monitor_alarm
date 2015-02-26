@@ -8,3 +8,5 @@
   index: .kibana
   visuTypeName: visualization
   alarmTypeName: alarm_config
+  defServiceName: zcloud
+

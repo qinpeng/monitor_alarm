@@ -14,7 +14,9 @@ import org.elasticsearch.action.get.MultiGetResponse;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.index.query.FilterBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
+import org.elasticsearch.index.query.MatchAllFilterBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.aggregations.AbstractAggregationBuilder;
@@ -30,6 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -78,18 +81,28 @@ public class MonitorAlarmService {
         return hits;
     }
 
-    public List<Map<String, Object>> getAlarmConfiguration() {
+    public List<Map<String, Object>> getAlarmConfiguration(String service) {
         List<Map<String, Object>> hits = Lists.newArrayList();
 
         try {
-            SearchResponse response = client.prepareSearch(alarmConfiguration.getIndex())
+
+            FilterBuilder filter;
+            if (StringUtils.isBlank(service)) {
+                filter = FilterBuilders.boolFilter()
+                        .should(FilterBuilders.notFilter(FilterBuilders.existsFilter("service")))
+                        .should(FilterBuilders.termFilter("service", alarmConfiguration.getDefServiceName()));
+            } else {
+                filter = FilterBuilders.termsFilter("service", service);
+            }
+
+            SearchRequestBuilder request = client.prepareSearch(alarmConfiguration.getIndex())
                     .setTypes(alarmConfiguration.getAlarmTypeName())
                     .setFrom(0)
                     .setSize(LIMIT_SIZE)
-                    .setQuery(QueryBuilders.filteredQuery(QueryBuilders.matchAllQuery(),
-                            FilterBuilders.matchAllFilter()))
-                    .execute().actionGet();
+                    .setQuery(QueryBuilders.filteredQuery(QueryBuilders.matchAllQuery(), filter));
 
+            //System.out.println(request.internalBuilder().toString());
+            SearchResponse response = request.execute().actionGet();
             for (SearchHit hit : response.getHits().getHits()) {
                 hits.add(hit.getSource());
             }
@@ -101,10 +114,10 @@ public class MonitorAlarmService {
         return hits;
     }
 
-    public List<Map<String, Object>> getVisualization(Iterable<String> ids) {
-
+    public List<Map<String, Object>> getVisualization(Collection<String> ids) {
         List<Map<String, Object>> hits = Lists.newArrayList();
         try {
+            if (ids == null || ids.size() == 0) return hits;
             MultiGetResponse response = client.prepareMultiGet()
                     .add(alarmConfiguration.getIndex(), alarmConfiguration.getVisuTypeName(), ids)
                     .execute().actionGet();
@@ -147,10 +160,10 @@ public class MonitorAlarmService {
         return null;
     }
 
-    public List<AlarmMetric> getAlarmMetrics() {
+    public List<AlarmMetric> getAlarmMetrics(String service) {
 
         try {
-            List<Map<String, Object>> alarmConfigs = getAlarmConfiguration();
+            List<Map<String, Object>> alarmConfigs = getAlarmConfiguration(service);
             Map<String, Map<String, Object>> alarmConfigMaps = Maps.newHashMap();
 
             for (Map<String, Object> alarmConfig : alarmConfigs) {

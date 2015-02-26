@@ -49,4 +49,14 @@ public class MonitorAlarmConfigurationYaml extends MonitorAlarmConfiguration {
     public String getIndex() {
         return this.monitorAlarmConfiguration.getIndex();
     }
+
+    @Override
+    public void setDefServiceName(String defServiceName) {
+        this.monitorAlarmConfiguration.setDefServiceName(defServiceName);
+    }
+
+    @Override
+    public String getDefServiceName() {
+        return this.monitorAlarmConfiguration.getDefServiceName();
+    }
 }

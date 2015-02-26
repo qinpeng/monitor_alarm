@@ -38,7 +38,8 @@ public class MonitorAlarmPlugin extends AlarmPluginBase {
     public ReturnValue execute(final ICommandLine cl)
             throws BadThresholdException {
 
-        List<AlarmMetric> alarmMetrics = alarmService.getAlarmMetrics();
+        String service = cl.getOptionValue("service");
+        List<AlarmMetric> alarmMetrics = alarmService.getAlarmMetrics(service);
 
         ThresholdsEvaluatorBuilder thrb = new ThresholdsEvaluatorBuilder();
         configureThresholdEvaluatorBuilder(thrb, cl, alarmMetrics);
