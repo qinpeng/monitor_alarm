@@ -1,6 +1,7 @@
 package com.zcloud.monitor.alarm.manager;
 
 import com.zcloud.monitor.alarm.configuration.ElasticSearchConfiguration;
+import com.zcloud.monitor.alarm.util.CommonUtils;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.ImmutableSettings;
@@ -19,7 +20,9 @@ public class ElasticSearchClientManager {
     public ElasticSearchClientManager(ElasticSearchConfiguration configuration) {
 
         ImmutableSettings.Builder settings = ImmutableSettings.settingsBuilder().put("cluster.name", configuration.getClusterName());
-        //settings.put("path.conf", this.getClass().getResource("/"));
+
+        settings.put("path.conf", CommonUtils.getConfigPath() + "/names.txt");
+
         this.client = new TransportClient(settings.build());
         for (String ipAddress : configuration.getAddress()) {
             String[] ipAndPort = ipAddress.split(":");

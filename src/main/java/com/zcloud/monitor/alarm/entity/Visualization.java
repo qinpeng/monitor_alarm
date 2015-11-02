@@ -110,6 +110,7 @@ public class Visualization {
             if ("second".equals(interval)) {
                 gte = lte - 1000;
             } else if ("minute".equals(interval)) {
+                lte = lte - 60000;
                 gte = lte - 60000;
             } else if ("hour".equals(interval)) {
                 gte = lte - 3600000;

@@ -7,7 +7,7 @@
         <command-line>
             <options>
                 <option shortName="s" longName="service" description="the monitored service's name"
-                        required="false" hasArgs="true" argName="serviceName" optionalArgs="false"/>
+                        required="false" hasArgs="true" argName="service" optionalArgs="false"/>
             </options>
         </command-line>
     </plugin>

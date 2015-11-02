@@ -12,7 +12,7 @@ import com.zcloud.monitor.alarm.util.Jsons;
 public class MonitorAlarmBootstrap {
     public static void main(String[] args) {
 
-        MonitorAlarmService service = BeanFactory.getAlarmServiceIstance();
+        //MonitorAlarmService service = BeanFactory.getAlarmServiceIstance();
 
 //        for (Map<String, Object> kibanaVisual : service.getVisualization()) {
 //            Visualization visualization = VisualizationParser.parse(kibanaVisual);
@@ -25,7 +25,18 @@ public class MonitorAlarmBootstrap {
 //            System.out.println("---------------");
 //        }
 
-        System.out.println(Jsons.objectToPrettyJSONStr(service.getAlarmMetrics("")));
+        //System.out.println(Jsons.objectToPrettyJSONStr(service.getAlarmMetrics("analytics")));
+
+
+      long s = System.currentTimeMillis();
+      long e = s - 60 * 1000;
+
+      System.out.println("S: " + s);
+      System.out.println("E: " + e);
+
+
 
     }
+
+
 }

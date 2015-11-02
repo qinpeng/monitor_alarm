@@ -103,8 +103,10 @@ public class MonitorAlarmService {
 
             //System.out.println(request.internalBuilder().toString());
             SearchResponse response = request.execute().actionGet();
-            for (SearchHit hit : response.getHits().getHits()) {
-                hits.add(hit.getSource());
+            if (response.getHits() != null && response.getHits().getHits() != null) {
+                for (SearchHit hit : response.getHits().getHits()) {
+                    hits.add(hit.getSource());
+                }
             }
         } catch (ElasticsearchException e) {
             e.printStackTrace();
@@ -276,7 +278,7 @@ public class MonitorAlarmService {
             name.append("_").append(aggs.getParams().get("field"));
         }
         metric.setName(name.toString());
-        metricMessage(metric);
+        metricMessage(metric, false);
 
         return metric;
 
@@ -314,26 +316,51 @@ public class MonitorAlarmService {
             AlarmMetric metric = new AlarmMetric();
             metric.setWarnRange(warnRange);
             metric.setMetric(new BigDecimal(count * 100 / sum));
-            String field = (String) visualization.getSegment().getParams().get("field");
-            metric.setName(visualization.getId() + "[%]:" + field + "=" + key + "");
-            metricMessage(metric);
+            metric.setName(visualization.getTitle());
+            metricMessage(metric, true);
 
             return metric;
         }
         return null;
     }
 
-    private void metricMessage(AlarmMetric metric) {
+    private void metricMessage(AlarmMetric metric, boolean isPercent) {
         if (metric == null) return;
 
         StringBuilder message = new StringBuilder();
         message.append(metric.getName());
-        message.append(":");
+        message.append(" ");
+        message.append(message(metric, isPercent));
+        message.append(", current is ");
         message.append(String.valueOf(metric.getMetric().doubleValue()));
-
-        message.append("(");
-        message.append(metric.getWarnRange().replace(":", "-"));
-        message.append(")");
+        if (isPercent) message.append("%");
         metric.setMessage(message.toString());
     }
+
+    private static String message(AlarmMetric metric, boolean isPercent) {
+        StringBuilder msg = new StringBuilder();
+        if (metric.getWarnRange() != null) {
+            String[] datas = metric.getWarnRange().trim().split(":");
+            if (datas.length == 2) {
+                for (int i = 0; i < datas.length; i++) {
+                    if (isPercent && StringUtils.isNotBlank(datas[i])) {
+                        datas[i] = datas[i] + "%";
+                    }
+                }
+
+                msg.append(datas[0]);
+                if (StringUtils.isBlank(datas[0])) {
+                    msg.append("<");
+                } else if (StringUtils.isBlank(datas[1])) {
+                    msg.append(">");
+                } else {
+                    msg.append("-");
+                }
+
+                msg.append(datas[1]);
+            }
+        }
+        return msg.toString();
+    }
+
 }

@@ -1,8 +1,8 @@
 # put this file to: ${jnrpe_home}/etc
 --- !com.zcloud.monitor.alarm.configuration.ElasticSearchConfiguration
   clusterName: monitoruat
-  address: ['10.10.10.159:9300']
-  serverAddress: ['http://10.10.10.159:9200']
+  address: ['10.20.20.13:9300']
+  serverAddress: ['http://10.20.20.13:9200']
 
 --- !com.zcloud.monitor.alarm.configuration.MonitorAlarmConfiguration
   index: .kibana

@@ -60,4 +60,9 @@ public class CommonUtils {
         }
         return CommonUtils.class.getClassLoader().getResourceAsStream(fileName);
     }
+
+    public static void main(String[] args) {
+        String path = (String) System.getProperties().get("env.home");
+        System.out.println("path:"+path);
+    }
 }
