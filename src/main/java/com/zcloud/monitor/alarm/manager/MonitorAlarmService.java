@@ -273,7 +273,7 @@ public class MonitorAlarmService {
         }
 
         //metric name
-        name.append(":").append(aggs.getType());
+        name.append(":").append(warnRange);
         if (aggs.getParams() != null && aggs.getParams().containsKey("field")) {
             name.append("_").append(aggs.getParams().get("field"));
         }
@@ -329,7 +329,7 @@ public class MonitorAlarmService {
 
         StringBuilder message = new StringBuilder();
         message.append(metric.getName());
-        message.append(" ");
+        message.append(":");
         message.append(message(metric, isPercent));
         message.append(", current is ");
         message.append(String.valueOf(metric.getMetric().doubleValue()));
