@@ -27,6 +27,7 @@ public class ElasticSearchClientManager {
         for (String ipAddress : configuration.getAddress()) {
             String[] ipAndPort = ipAddress.split(":");
             ((TransportClient) this.client).addTransportAddress(new InetSocketTransportAddress(ipAndPort[0], Integer.valueOf(ipAndPort[1])));
+            System.out.println("ES address " + ipAndPort[0] + " port " + ipAndPort[1]);
         }
 
     }

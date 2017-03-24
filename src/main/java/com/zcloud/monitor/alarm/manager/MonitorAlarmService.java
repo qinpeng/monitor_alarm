@@ -47,12 +47,14 @@ public class MonitorAlarmService {
     private final Client client;
     private final MonitorAlarmConfiguration alarmConfiguration;
     private final static int LIMIT_SIZE = 500;
+    private ElasticSearchConfiguration esConfig;
 
     public MonitorAlarmService(ElasticSearchConfiguration esearchConfig,
                                MonitorAlarmConfiguration alarmConfiguration) {
 
         this.alarmConfiguration = alarmConfiguration;
         this.client = new ElasticSearchClientManager(esearchConfig).getClient();
+        this.esConfig = esearchConfig;
     }
 
 
@@ -84,9 +86,10 @@ public class MonitorAlarmService {
     public List<Map<String, Object>> getAlarmConfiguration(String service) {
         List<Map<String, Object>> hits = Lists.newArrayList();
 
+        FilterBuilder filter = null;
         try {
 
-            FilterBuilder filter;
+
             if (StringUtils.isBlank(service)) {
                 filter = FilterBuilders.boolFilter()
                         .should(FilterBuilders.notFilter(FilterBuilders.existsFilter("service")))
@@ -108,9 +111,9 @@ public class MonitorAlarmService {
                     hits.add(hit.getSource());
                 }
             }
-        } catch (ElasticsearchException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            logger.error("Get alarm config error.", e);
+            logger.error("Get alarm config error. Service is " + service + ". Filter is " + filter != null ? filter.toString() : null + ". ES address is " + esConfig.getServerAddress(),e);
         }
 
         return hits;
